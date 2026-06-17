@@ -45,7 +45,7 @@ func Flat[S ~[][]E, E any](s S) []E {
 }
 
 func ExpandRange[R [2]N, N Int](r R) []N {
-	rr := []N{}
+	rr := make([]N, 0, r[1] - r[0] + 1)
 	
 	for n := r[0]; n <= r[1]; n++ {
 		rr = append(rr, n)
@@ -55,7 +55,7 @@ func ExpandRange[R [2]N, N Int](r R) []N {
 }
 
 func ExpandRanges[Rs []R, R [2]N, N Int](rs Rs) [][]N {
-	rrs := [][]N{}
+	rrs := make([][]N, 0, len(rs))
 
 	for _, r := range rs {
 		rrs = append(rrs, ExpandRange(r))
