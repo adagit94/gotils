@@ -1,7 +1,7 @@
 package slices
 
 import (
-	"github.com/adagit94/gotils/types"
+	"github.com/adagit94/t"
 	"slices"
 )
 
@@ -39,7 +39,7 @@ func Flat[S ~[][]E, E any](s S) []E {
 	return ss
 }
 
-func ExpandRange[R [2]N, N types.Int](r R) []N {
+func ExpandRange[R [2]N, N t.Int](r R) []N {
 	rr := make([]N, 0, r[1]-r[0]+1)
 
 	for n := r[0]; n <= r[1]; n++ {
@@ -49,7 +49,7 @@ func ExpandRange[R [2]N, N types.Int](r R) []N {
 	return rr
 }
 
-func ExpandRanges[Rs []R, R [2]N, N types.Int](rs Rs) [][]N {
+func ExpandRanges[Rs []R, R [2]N, N t.Int](rs Rs) [][]N {
 	rrs := make([][]N, 0, len(rs))
 
 	for _, r := range rs {
@@ -59,6 +59,6 @@ func ExpandRanges[Rs []R, R [2]N, N types.Int](rs Rs) [][]N {
 	return rrs
 }
 
-func ExpandRangesFlat[Rs []R, R [2]N, N types.Int](rs Rs) []N {
+func ExpandRangesFlat[Rs []R, R [2]N, N t.Int](rs Rs) []N {
 	return Flat(ExpandRanges(rs))
 }

@@ -2,7 +2,10 @@ module github.com/adagit94/gotils
 
 go 1.26.4
 
-require github.com/bytedance/sonic v1.14.2
+require (
+	github.com/adagit94/t v0.1.0
+	github.com/bytedance/sonic v1.14.2
+)
 
 require (
 	github.com/bytedance/gopkg v0.1.3 // indirect
