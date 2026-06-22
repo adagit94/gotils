@@ -11,16 +11,16 @@ func WriteFile(data []byte, perms os.FileMode, pathSegments ...string) error {
 }
 
 func Write(path string, data []byte, perms os.FileMode) error {
-	if dirErr := os.MkdirAll(filepath.Dir(path), perms); dirErr != nil {
-		return dirErr
+	if err := os.MkdirAll(filepath.Dir(path), perms); err != nil {
+		return err
 	}
 
 	return os.WriteFile(path, data, perms)
 }
 
 func WriteString(path string, data string, perms os.FileMode) error {
-	if dirErr := os.MkdirAll(filepath.Dir(path), perms); dirErr != nil {
-		return dirErr
+	if err := os.MkdirAll(filepath.Dir(path), perms); err != nil {
+		return err
 	}
 
 	file, fileErr := os.Create(path)
@@ -31,16 +31,16 @@ func WriteString(path string, data string, perms os.FileMode) error {
 
 	defer file.Close()
 
-	if permErr := file.Chmod(perms); permErr != nil {
-		return permErr
+	if err := file.Chmod(perms); err != nil {
+		return err
 	}
 
-	if _, writeErr := file.WriteString(data); writeErr != nil {
-		return writeErr
+	if _, err := file.WriteString(data); err != nil {
+		return err
 	}
 
-	if syncErr := file.Sync(); syncErr != nil {
-		return syncErr
+	if err := file.Sync(); err != nil {
+		return err
 	}
 
 	return nil
