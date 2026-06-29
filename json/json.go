@@ -1,9 +1,10 @@
 package json
 
 import (
+	"os"
+
 	"github.com/adagit94/gotils/fs"
 	"github.com/bytedance/sonic"
-	"os"
 )
 
 func Json[V any](v *V) ([]byte, error) {
@@ -17,7 +18,7 @@ func JsonToFile[V any](v *V, perm os.FileMode, pathSegments ...string) error {
 		return err
 	}
 
-	err2 := fs.WriteFile(s, perm, pathSegments...)
+	err2 := fs.WriteBytesAt(s, perm, pathSegments...)
 
 	if err2 != nil {
 		return err2
