@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 )
 
-func WriteBytes(path string, data []byte, perms os.FileMode) error {
+func WriteFile[D []byte | string](path string, perms os.FileMode, data D, write func(file *os.File, data D) (int, error)) error {
 	if err := os.MkdirAll(filepath.Dir(path), perms); err != nil {
 		return err
 	}
@@ -22,7 +22,7 @@ func WriteBytes(path string, data []byte, perms os.FileMode) error {
 		return err
 	}
 
-	if _, err := file.Write(data); err != nil {
+	if _, err := write(file, data); err != nil {
 		return err
 	}
 
@@ -33,30 +33,18 @@ func WriteBytes(path string, data []byte, perms os.FileMode) error {
 	return nil
 }
 
-func WriteString(path string, data string, perms os.FileMode) error {
-	if err := os.MkdirAll(filepath.Dir(path), perms); err != nil {
-		return err
-	}
+func WriteFileBytes(path string, perms os.FileMode, data []byte) error {
+	return WriteFile(path, perms, data, writeBytes)
+}
 
-	file, fileErr := os.Create(path)
+func WriteFileString(path string, perms os.FileMode, data string) error {
+	return WriteFile(path, perms, data, writeString)
+}
 
-	if fileErr != nil {
-		return fileErr
-	}
+func writeBytes(file *os.File, data []byte) (int, error) {
+	return file.Write(data)
+}
 
-	defer file.Close()
-
-	if err := file.Chmod(perms); err != nil {
-		return err
-	}
-
-	if _, err := file.WriteString(data); err != nil {
-		return err
-	}
-
-	if err := file.Sync(); err != nil {
-		return err
-	}
-
-	return nil
+func writeString(file *os.File, data string) (int, error) {
+	return file.WriteString(data)
 }
