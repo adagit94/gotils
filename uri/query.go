@@ -4,7 +4,7 @@ import (
 	strs "strings"
 )
 
-func ParseQueryStr(queryStr string) *map[string]string {
+func ParseQueryStr(queryStr string) map[string]string {
 	queryParams := make(map[string]string)
 
 	for item := range strs.SplitSeq(queryStr, "&") {
@@ -15,5 +15,5 @@ func ParseQueryStr(queryStr string) *map[string]string {
 		}
 	}
 
-	return &queryParams
+	return queryParams
 }
