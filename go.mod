@@ -3,7 +3,7 @@ module github.com/adagit94/gotils
 go 1.26.4
 
 require (
-	github.com/adagit94/t v0.1.0
+	github.com/adagit94/t v0.2.0
 	github.com/bytedance/sonic v1.14.2
 )
 
@@ -16,5 +16,3 @@ require (
 	golang.org/x/arch v0.0.0-20210923205945-b76863e36670 // indirect
 	golang.org/x/sys v0.22.0 // indirect
 )
-
-replace github.com/adagit94/t => ../t
