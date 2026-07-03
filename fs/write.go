@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 )
 
+// WriteFile is a wrapper around multiple underlaying commands that handle process of writing a file. E.g. it creates a directory in case it doesn't exists. It calls os.File.Sync() to flush changes to disk. Custom write func. can be passed as argument - typically to call os.File.Write or os.File.WriteString method.
 func WriteFile[D []byte | string](path string, perms os.FileMode, data D, write func(file *os.File, data D) (int, error)) error {
 	if err := os.MkdirAll(filepath.Dir(path), perms); err != nil {
 		return err
@@ -33,10 +34,12 @@ func WriteFile[D []byte | string](path string, perms os.FileMode, data D, write 
 	return nil
 }
 
+// WriteFileBytes is a wrapper around multiple underlaying commands that handle process of writing bytes to the file. E.g. it creates a directory in case it doesn't exists. It calls os.File.Sync() to flush changes to disk.
 func WriteFileBytes(path string, perms os.FileMode, data []byte) error {
 	return WriteFile(path, perms, data, writeBytes)
 }
 
+// WriteFileString is a wrapper around multiple underlaying commands that handle process of writing string to the file. E.g. it creates a directory in case it doesn't exists. It calls os.File.Sync() to flush changes to disk.
 func WriteFileString(path string, perms os.FileMode, data string) error {
 	return WriteFile(path, perms, data, writeString)
 }

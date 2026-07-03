@@ -1,12 +1,13 @@
 package numbers
 
 import (
-	"cmp"
 	"crypto/rand"
 	"math/big"
+	"github.com/adagit94/t"
 )
 
-func Clamp[T cmp.Ordered](v T, min T, max T) T {
+// Clamp clamps any Number value passed as v to range defined by min and max bounds.
+func Clamp[T t.Number](v T, min T, max T) T {
 	if v < min {
 		return min
 	}
@@ -18,10 +19,12 @@ func Clamp[T cmp.Ordered](v T, min T, max T) T {
 	return v
 }
 
+// Simplified wrapper around rand.Int(rand.Reader, big.NewInt(max)).
 func RandInt(max int64) (*big.Int, error) {
 	return rand.Int(rand.Reader, big.NewInt(max))
 }
 
+// Simplified wrapper around rand.Int(rand.Reader, big.NewInt(max)). It panics in case of returned non-nil error.
 func RandIntPanic(max int64) *big.Int {
 	n, err := RandInt(max)
 

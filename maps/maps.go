@@ -5,6 +5,7 @@ import (
 	"slices"
 )
 
+// Swap returns a new map with keys being swapped for respective values and vice versa.
 func Swap[K comparable, V comparable](m map[K]V) map[V]K {
 	keys := slices.Collect(maps.Keys(m))
 	m2 := make(map[V]K, len(keys))

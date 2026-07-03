@@ -2,26 +2,27 @@ package exec
 
 import (
 	"sync"
+	"github.com/adagit94/t"
+	ch "github.com/adagit94/gotils/channels"
 )
 
-func Replicate[A any, V any](maxRetries uint8, op func(arg A) (V, error), args ...A) ([]V, []error) {
-	values := make([]V, len(args))
-	errors := make([]error, len(args))
-
+// Replicate is intended for replication uses cases where same function is triggered repeatedly with potentially variable argument (like FS or network URI). Every func. call for respective arguments runs in separate goroutine, so whole replication process can be performed in parallel. In case of failure op. can be repeated based on maxRetries. It returns slice of Results with same order as arguments passed. Non-nil errors should be returned from failed calls to attempt retry when maxRetries > 0 and report error correctly in Result. 
+func Replicate[Arg any, Res any](maxRetries uint8, op func(arg Arg) (Res, error), args ...Arg) []*t.Result[Res] {
 	var wg sync.WaitGroup
+	resultsChan := make(chan *t.Result[Res], len(args))
 
-	for i, arg := range args {
+	for _, arg := range args {
 		wg.Go(func() {
-			val, err := Retried(func() (V, error) {
+			res, err := Retried(func() (Res, error) {
 				return op(arg)
 			}, maxRetries)
 
-			values[i] = val
-			errors[i] = err
+			resultsChan <- &t.Result[Res]{Result: res, Error: err}
 		})
 	}
 
 	wg.Wait()
-
-	return values, errors
+	close(resultsChan)
+	
+	return ch.ChanToSlice(resultsChan)
 }

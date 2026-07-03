@@ -5,7 +5,8 @@ import (
 	"strings"
 )
 
-func GetEnvVarsCli() map[string]string {
+// EnvMap maps all env. variables returned by os.Environ() to map data structure.
+func EnvMap() map[string]string {
 	args := os.Environ()
 	vars := make(map[string]string, len(args))
 

@@ -16,3 +16,5 @@ require (
 	golang.org/x/arch v0.0.0-20210923205945-b76863e36670 // indirect
 	golang.org/x/sys v0.22.0 // indirect
 )
+
+replace github.com/adagit94/t => ../t
