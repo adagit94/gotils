@@ -1,8 +1,8 @@
 package slices
 
 import (
-	"slices"
 	"github.com/adagit94/t"
+	"slices"
 )
 
 // Map maps S passed as argument with elements of type E to different type EE returned by the passed function. len(E) == len(EE) and new slice with underlaying array is allocated without mutation of original one.
@@ -67,4 +67,33 @@ func ExpandRanges[Rs []R, R [2]N, N t.Int](rs Rs) [][]N {
 // ExpandRangesFlat expands nested slices based on passed range bounds in form [from, to] with inclusion of intermediary values and then flattens the slice, so nested, expanded slices form just single 1D resulting slice. ExpandRanges with Flat applied afterwards. It's inclusive of destination (to) values. E.g. [[2, 4], [6, 8]] returns [2, 3, 4, 6, 7, 8].
 func ExpandRangesFlat[Rs []R, R [2]N, N t.Int](rs Rs) []N {
 	return Flat(ExpandRanges(rs))
+}
+
+// Replace elements from a to b (exclusive) with passed compatible value e and return modified slice.
+func ReplaceRepeated[S ~[]E, E any](s S, e E, a, b int) S {
+	for i := a; i < b; i++ {
+		s[i] = e
+	}
+
+	return s
+}
+
+// Replace every element in s with passed compatible value e and return modified slice.
+func ReplaceRepeatedEvery[S ~[]E, E any](s S, e E) S {
+	for i := range len(s) {
+		s[i] = e
+	}
+
+	return s
+}
+
+// Creates and fills new slice based on passed capacity with element value.
+func NewFilled[E any](element E, capacity int) []E {
+	s := make([]E, 0, capacity)
+
+	for range cap(s) {
+		s = append(s, element)
+	}
+
+	return s
 }
