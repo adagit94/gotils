@@ -1,7 +1,6 @@
 package slices
 
 import (
-	"github.com/adagit94/t"
 	"slices"
 )
 
@@ -42,31 +41,30 @@ func Flat[S ~[][]E, E any](s S) []E {
 	return ss
 }
 
-// ExpandRange expands passed range (from, to) and returns slice with intermediary values included. It's inclusive of destination (to) value. E.g. [1, 4] returns [1, 2, 3, 4].
-func ExpandRange[N t.Int](from N, to N) []N {
-	rr := make([]N, 0, to-from+1)
+// ExpandRange expands passed range (from, to) and returns slice with intermediary values included. It's inclusive of destination (to) value, works for both positive and negative ranges and in both ascending and descending order. E.g. [1, 3] returns [1, 2, 3]; [3, 1] returns [3, 2, 1]; [-1, -3] returns [-1, -2, -3]; [-3, -1] returns [-3, -2, -1]; [-1, 1] returns [-1, 0, 1]; [1, -1] returns [1, 0, -1].
+func ExpandRange(from int, to int) []int {
+	interval := to - from
 
-	for n := from; n <= to; n++ {
-		rr = append(rr, n)
+	if interval < 0 {
+		interval *= -1
 	}
 
-	return rr
-}
+	// +1 to include final value also.
+	interval += 1
 
-// ExpandRanges expands based on passed range bounds in form [from, to] and returns slices with intermediary values included for each range. It's inclusive of destination (to) values. It's just a plural form of ExpandRange with support for multiple of them. E.g. [2, 4], [6, 8] returns [[2, 3, 4], [6, 7, 8]].
-func ExpandRanges[R [2]N, N t.Int](rs ...R) [][]N {
-	rrs := make([][]N, 0, len(rs))
+	r := make([]int, 0, interval)
 
-	for _, r := range rs {
-		rrs = append(rrs, ExpandRange(r[0], r[1]))
+	if from < to {
+		for n := from; n <= to; n++ {
+			r = append(r, n)
+		}
+	} else {
+		for n := from; n >= to; n-- {
+			r = append(r, n)
+		}
 	}
 
-	return rrs
-}
-
-// ExpandRangesFlat expands based on passed range bounds in form [from, to] with inclusion of intermediary values and then flattens the slice, so expanded slices form just single 1D resulting slice. It's inclusive of destination (to) values. E.g. [[2, 4], [6, 8]] returns [2, 3, 4, 6, 7, 8].
-func ExpandRangesFlat[R [2]N, N t.Int](rs ...R) []N {
-	return Flat(ExpandRanges(rs...))
+	return r
 }
 
 // Replace elements from a to b (exclusive) with passed compatible value e and return modified slice.
