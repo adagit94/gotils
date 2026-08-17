@@ -5,7 +5,7 @@ import (
 )
 
 // Trigger f in it's own, separate goroutine and return channel to receive the result. Channel is unbuffered and should be paired with blocking receiver.
-func AwaitableTask[R any](f func() R) chan <- R {
+func AwaitableTask[R any](f func() R) <- chan R {
 	r := make(chan R)
 
 	go func() {
