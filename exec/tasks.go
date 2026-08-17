@@ -4,6 +4,34 @@ import (
 	"sync"
 )
 
+// Trigger f in it's own, separate goroutine and return channel to receive the result. Channel is unbuffered and should be paired with blocking receiver.
+func AwaitableTask[R any](f func() R) chan <- R {
+	r := make(chan R)
+
+	go func() {
+		r <- f()
+	}()
+
+	return r
+}
+
+// Run each task concurrently in it's own, separate goroutine and return slice of results in the same order as functions passed.
+func AwaitTasks[R any](tasks...func() R) []R {
+	s := make([]R, len(tasks))
+
+	var wg sync.WaitGroup
+
+	for i, f := range tasks {
+		wg.Go(func() {
+			s[i] = f()
+		})
+	}
+	
+	wg.Wait()
+	
+	return s
+}
+
 // Trigger f1 and f2 in separate goroutines and wait for completition using sync.WaitGroup.
 func Await2Tasks[R1 any, R2 any](f1 func() R1, f2 func() R2) (r1 R1, r2 R2) {
 	var wg sync.WaitGroup
